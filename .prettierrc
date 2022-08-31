@@ -1,0 +1,11 @@
+{
+  "trailingComma": "all",
+  "printWidth": 255,
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": true,
+  "quoteProps": "as-needed",
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "disableLanguages": ["json"]
+}
