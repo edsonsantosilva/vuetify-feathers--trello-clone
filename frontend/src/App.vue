@@ -37,7 +37,7 @@
       </v-btn>
     </v-app-bar>
 
-    <v-main>
+    <v-main class="grey darken-4">
       <router-view />
     </v-main>
   </v-app>

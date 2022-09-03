@@ -18,14 +18,15 @@
       "header": {
         "typ": "access"
       },
-      "audience": "https://yourdomain.com",
-      "issuer": "feathers",
+      "audience": "https://board.coding.garden",
+      "issuer": "coding.garden",
       "algorithm": "HS256",
       "expiresIn": "1d"
     },
     "local": {
       "usernameField": "email",
-      "passwordField": "password"
+      "passwordField": "password",
+      "entity": "user"
     }
   },
   "mongodb": "mongodb://localhost:27017/backend"
