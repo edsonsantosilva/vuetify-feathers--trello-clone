@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { FeathersVuex } from '../plugins/feathers-client';
-// import auth from './store.auth'
+import { FeathersVuex, makeAuthPlugin } from '../plugins/feathers-client';
 
 Vue.use(Vuex);
 Vue.use(FeathersVuex);
 
+const auth = makeAuthPlugin({ userService: 'users' });
 const requireModule = require.context(
   // The path where the service modules live
   './services',
@@ -23,5 +23,5 @@ export default new Vuex.Store({
   state: {},
   mutations: {},
   actions: {},
-  plugins: [...servicePlugins]
+  plugins: [...servicePlugins, auth]
 });

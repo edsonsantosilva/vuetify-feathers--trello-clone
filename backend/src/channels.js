@@ -45,6 +45,7 @@ module.exports = function(app) {
 
     // e.g. to publish all service events to all authenticated users use
     //TODO: Change this back to authenticated after applying the authentication and login method
+    // return app.channel('authenticated');
     return app.channel('anonymous');
   });
 

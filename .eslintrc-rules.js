@@ -1,6 +1,6 @@
 module.exports = {
   rules: {
-    'linebreak-style': ['error', 'unix'],
+    'linebreak-style': ['error', 'windows'],
     'no-case-declarations': 0,
     quotes: ['error', 'single'],
     semi: ['error', 'always'],
