@@ -4,15 +4,22 @@ const {
   hashPassword, protect
 } = require('@feathersjs/authentication-local').hooks;
 
+const wait = () => (
+  new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, 2000);
+  })
+);
 module.exports = {
   before: {
-    all: [],
-    find: [ authenticate('jwt') ],
-    get: [ authenticate('jwt') ],
-    create: [ hashPassword('password') ],
-    update: [ hashPassword('password'),  authenticate('jwt') ],
-    patch: [ hashPassword('password'),  authenticate('jwt') ],
-    remove: [ authenticate('jwt') ]
+    all: [wait],
+    find: [],
+    get: [authenticate('jwt')],
+    create: [hashPassword('password')],
+    update: [hashPassword('password'), authenticate('jwt')],
+    patch: [hashPassword('password'), authenticate('jwt')],
+    remove: [authenticate('jwt')]
   },
 
   after: {

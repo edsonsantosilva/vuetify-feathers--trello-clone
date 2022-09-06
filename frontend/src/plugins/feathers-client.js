@@ -10,16 +10,6 @@ const socket = io('http://localhost:3030', { transports: ['websocket'] });
 const feathersClient = feathers()
   .configure(socketio(socket))
   .configure(auth({ storage: window.localStorage }));
-  // .hooks({
-  //   before: {
-  //     all: [
-  //       iff(
-  //         context => ['create', 'update', 'patch'].includes(context.method),
-  //         discard('__id', '__isTemp')
-  //       )
-  //     ]
-  //   }
-  // });
 
 export default feathersClient;
 

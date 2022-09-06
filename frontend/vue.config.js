@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const webpack = require('webpack'); // eslint-disable-line import/no-extraneous-dependencies
 
 const packageJson = fs.readFileSync('./package.json');
@@ -33,6 +34,11 @@ module.exports = {
         },
       }),
     ],
+    resolve: {
+      alias: {
+        '@': path.join(__dirname, 'src/')
+      }
+    }
   },
   chainWebpack: config => {
     config.plugins.delete('prefetch');
