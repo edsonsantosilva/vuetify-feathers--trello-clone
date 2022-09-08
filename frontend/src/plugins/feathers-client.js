@@ -3,7 +3,7 @@ import socketio from '@feathersjs/socketio-client';
 import auth from '@feathersjs/authentication-client';
 import io from 'socket.io-client';
 // import { iff, discard } from 'feathers-hooks-common';
-import feathersVuex from 'feathers-vuex';
+import feathersVuex, { initAuth } from 'feathers-vuex';
 
 const socket = io('http://localhost:3030', { transports: ['websocket'] });
 
@@ -23,4 +23,4 @@ const { makeServicePlugin, makeAuthPlugin, BaseModel, models, FeathersVuex } = f
   }
 );
 
-export { makeAuthPlugin, makeServicePlugin, BaseModel, models, FeathersVuex };
+export { makeAuthPlugin, makeServicePlugin, initAuth, BaseModel, models, FeathersVuex };

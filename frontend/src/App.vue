@@ -28,10 +28,23 @@
       <v-spacer />
 
       <v-btn
+        v-if="!isAuthenticated"
         :to="{ name: 'signup'}"
         text
       >
         <span class="mr-2">Signup</span>
+      </v-btn>
+      <v-btn
+        v-else
+        text
+      >
+        <span class="mr-2">{{ currentUser.displayName }}</span>
+      </v-btn>
+      <v-btn
+        :to="{ name: 'login'}"
+        text
+      >
+        <span class="mr-2">Login</span>
       </v-btn>
     </v-app-bar>
 
@@ -42,6 +55,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { models } from 'feathers-vuex';
 
 export default {
   name: 'App',
@@ -49,5 +64,10 @@ export default {
   data: () => ({
     //
   }),
+  computed: {
+    ...mapGetters('auth', ['isAuthenticated', 'user']),
+    User: () => models.api.User,
+    currentUser: vm => (vm.isAuthenticated ? vm.user : new vm.User())
+  }
 };
 </script>

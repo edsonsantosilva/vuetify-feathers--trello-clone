@@ -13,6 +13,12 @@
       required
     />
     <v-text-field
+      v-model="signUpUser.email"
+      :rules="notBlank"
+      label="Email"
+      required
+    />
+    <v-text-field
       v-model="signUpUser.password"
       :rules="notBlank"
       label="Password"
@@ -54,18 +60,23 @@ export default {
     usernameRules: [v => !!v || 'Field is required'],
     notBlank: [v => !!v || 'Field is required'],
     confirmPasswordRules: [confirmPassword => confirmPassword === vm.signUpUser.password || 'Passowords don\'t match'],
+    emailRules: [
+      v => !!v || 'E-mail is required',
+      v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+    ]
   }),
   computed: {
     User: () => models.api.User,
   },
   created() {
+    console.log('models api', models.api);
     this.signUpUser = new this.User();
   },
+
   methods: {
     async signUp() {
       if (this.valid) {
         await this.signUpUser.create();
-        console.log('user saved', this.signUpUser);
         this.signUpUser = new this.User();
       }
     },
