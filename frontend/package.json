@@ -13,6 +13,7 @@
     "@feathersjs/authentication-client": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/socketio-client": "^4.3.3",
+    "@mdi/font": "^7.0.96",
     "@vue/composition-api": "^0.6.7",
     "core-js": "^2.6.5",
     "feathers-hooks-common": "^6.1.5",
