@@ -41,6 +41,16 @@
         >
           Login
         </v-btn>
+        <div>
+          <v-btn
+            :disabled="loggingUser"
+            plain
+            class="mt-6 text-overline text-decoration-underline"
+            @click="$router.push({ name: 'signup' })"
+          >
+            Sign up for an account
+          </v-btn>
+        </div>
       </v-form>
     </v-container>
   </v-container>

@@ -6,7 +6,7 @@
     >
       <v-container fluid class="pa-0">
         <v-row class="justify-start align-center">
-          <v-col class="pa-0 pl-2" cols="auto" @click="$router.push('/')">
+          <v-col class="pa-0 pl-2" cols="auto" @click="$router.push({ name: 'home'})">
             <v-img
               alt="Vuetify Logo"
               class="shrink mr-2"
@@ -16,7 +16,7 @@
               width="40"
             />
           </v-col>
-          <v-col class="pa-0" cols="auto" @click="$router.push('/')">
+          <v-col class="pa-0" cols="auto" @click="$router.push({ name: 'home' })">
             <v-img
               alt="Vuetify Name"
               class="shrink mt-1 hidden-sm-and-down"
@@ -54,10 +54,19 @@
           </v-col>
           <v-col cols="auto">
             <v-btn
+              v-if="!isAuthenticated"
               :to="{ name: 'login'}"
               text
             >
               <span class="mr-2">Login</span>
+            </v-btn>
+            <v-btn
+              v-else
+              :loading="loggingOut"
+              text
+              @click="logout"
+            >
+              <span class="mr-2">Logout</span>
             </v-btn>
           </v-col>
         </v-row>
@@ -71,13 +80,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { models } from 'feathers-vuex';
 
 export default {
   name: 'App',
 
   data: () => ({
+    loggingOut: false
   }),
   computed: {
     ...mapGetters('auth', ['isAuthenticated', 'user']),
@@ -85,12 +95,29 @@ export default {
     currentUser: vm => (vm.isAuthenticated ? vm.user : new vm.User()),
     selectedTheme: vm => (vm.$vuetify.theme.dark ? 'Dark' : 'Light')
   },
-  created() {
+  async created() {
     this.$vuetify.theme.dark = true;
+    try {
+      await this.authenticate();
+    } catch (error) {
+      console.log('created app.vue', error);
+      this.$router.push({ name: 'login' });
+    }
   },
   methods: {
+    ...mapActions('auth', ['authenticate']),
     changeColor() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    },
+    async logout() {
+      this.loggingOut = true;
+      try {
+        await this.$store.dispatch('auth/logout');
+        this.$router.replace({ name: 'login' });
+      } catch (error) {
+        console.error('An error happened during logout', error);
+      }
+      this.loggingOut = false;
     }
   }
 };
