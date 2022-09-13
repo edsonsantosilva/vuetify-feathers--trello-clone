@@ -1,15 +1,19 @@
-// const hooks = require('feathers-authentication-hooks');
+const hooks = require('feathers-authentication-hooks');
 
 module.exports = {
   before: {
     all: [],
-    find: [
-      // hooks.restrictToOwner({ ownerField: 'ownerId' }),
+    find: [ 
+      context => {
+        console.log(context);
+      },
+      hooks.setField({ from: 'params.user._id', as: 'params.query.ownerId'})
     ],
     get: [
       // hooks.restrictToOwner({ ownerField: 'ownerId' }),
     ],
     create: [
+      hooks.setField({ from: 'params.user._id', as: 'data.ownerId'})
       // hooks.associateCurrentUser({ as: 'ownerId' }),
     ],
     update: [

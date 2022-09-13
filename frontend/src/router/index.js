@@ -24,6 +24,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "boards" */ '../views/Boards.vue'),
   },
   {
+    path: '/board/:id',
+    name: 'board-page',
+    props: true,
+    component: () => import(/* webpackChunkName: "boards" */ '../views/BoardPage.vue'),
+  },
+  {
     path: '/signup',
     name: 'signup',
     component: () => import(/* webpackChunkName: "boards" */ '../views/Signup.vue'),
