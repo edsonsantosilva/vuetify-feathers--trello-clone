@@ -51,6 +51,28 @@
             >
               <span class="mr-2">{{ currentUser.displayName }}</span>
             </v-btn>
+            <v-menu offset-y>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="primary"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  {{ currentUser.displayName }}
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item
+                  v-for="(item, index) in items"
+                  :key="index"
+                >
+                  <v-list-item-title @click="goToRoute(item.route)">
+                    {{ item.title }}
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </v-col>
           <v-col cols="auto">
             <v-btn
@@ -73,8 +95,8 @@
       </v-container>
     </v-app-bar>
 
-    <v-main class="">
-      <router-view />
+    <v-main>
+      <router-view class="pa-0" />
     </v-main>
   </v-app>
 </template>
@@ -87,7 +109,11 @@ export default {
   name: 'App',
 
   data: () => ({
-    loggingOut: false
+    loggingOut: false,
+    items: [
+      { title: 'Boards', route: 'boards' },
+      { title: 'Settings', route: 'settings' }
+    ]
   }),
   computed: {
     ...mapGetters('auth', ['isAuthenticated', 'user']),
@@ -118,6 +144,9 @@ export default {
         console.error('An error happened during logout', error);
       }
       this.loggingOut = false;
+    },
+    goToRoute(route) {
+      this.$router.push(`/${route}`);
     }
   }
 };
