@@ -83,12 +83,14 @@ export default {
     Board: () => models.api.Board,
     board: vm => vm.Board.getFromStore(vm.id),
     List: () => models.api.List,
-    lists: vm => vm.List.findInStore().data
+    lists: vm => vm.List.findInStore({ query: { boardId: vm.id } }).data,
   },
   created() {
     this.List.find({ query: { boardId: this.id } });
-    this.listForm = new this.List();
     this.initiateListForm();
+  },
+  beforeDestroy() {
+    this.$store.commit('lists/clearAll');
   },
   methods: {
     initiateListForm() {
@@ -96,8 +98,8 @@ export default {
       this.listForm.boardId = this.id;
     },
     async createList() {
-      const response = await this.listForm.create();
-      console.log('response list', response);
+      // TODO: apply try catch
+      await this.listForm.create();
       this.initiateListForm();
     },
   }

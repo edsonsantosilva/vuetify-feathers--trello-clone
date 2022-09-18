@@ -69,6 +69,10 @@ export default {
   created() {
     this.Board.find();
   },
+  beforeDestroy() {
+    // this.$store.commit('boards/clearAll');
+    // this.$store.commit('boards/removeTemps', []);
+  },
   methods: {
     showBoardForm() {
       this.boardForm = new this.Board();

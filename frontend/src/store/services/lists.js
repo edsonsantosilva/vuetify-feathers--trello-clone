@@ -35,7 +35,9 @@ feathersClient.service(servicePath).hooks({
   },
   after: {
     all: [],
-    find: [],
+    find: [
+      // context => { context.result.data[0].name = 'Edson'; }
+    ],
     get: [],
     create: [],
     update: [],
