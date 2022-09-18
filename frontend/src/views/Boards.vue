@@ -4,16 +4,26 @@
       <v-row>
         <v-col v-for="board of boards" :key="board._id" cols="3">
           <v-card @click="openBoard(board)">
-            <v-card-title>{{ board.name }}</v-card-title>
-            <v-card-subtitle>{{ board.name }}</v-card-subtitle>
+            <v-img
+              height="200px"
+              gradient="to bottom, rgba(255,255,255,.15), rgba(0,0,0,.5)"
+              :src="board.backgroundUrl"
+            >
+              <v-card-title>{{ board.name }}</v-card-title>
+            </v-img>
+            <v-card-subtitle class="py-1">
+              updated at: {{ new Date(board.updatedAt).toLocaleString() }}
+            </v-card-subtitle>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
     <v-container>
-      <v-btn @click="addBoard">
+      <v-btn @click="showBoardForm">
         Add
       </v-btn>
+
+      <!-- TODO: Create board example when adding a board instead of the form -->
       <v-form v-if="showAddBoardForm" ref="form" @submit.prevent="createBoard">
         <v-text-field
           v-model="boardForm.name"
@@ -60,7 +70,7 @@ export default {
     this.Board.find();
   },
   methods: {
-    addBoard() {
+    showBoardForm() {
       this.boardForm = new this.Board();
       this.showAddBoardForm = true;
     },
@@ -69,7 +79,6 @@ export default {
       this.showAddBoardForm = false;
     },
     async openBoard(board) {
-      console.log('board clicked', board);
       this.$router.push({ name: 'board-page', params: { id: board._id } });
       this.showAddBoardForm = false;
     }

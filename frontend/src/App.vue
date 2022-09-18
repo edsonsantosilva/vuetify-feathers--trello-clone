@@ -45,13 +45,7 @@
             >
               <span class="mr-2">Signup</span>
             </v-btn>
-            <v-btn
-              v-else
-              text
-            >
-              <span class="mr-2">{{ currentUser.displayName }}</span>
-            </v-btn>
-            <v-menu offset-y>
+            <v-menu v-else offset-y>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   color="primary"

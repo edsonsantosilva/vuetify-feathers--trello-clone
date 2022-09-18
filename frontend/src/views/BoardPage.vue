@@ -12,7 +12,7 @@
         Board name: {{ board.name }}
       </v-col>
       <v-col
-        v-for="(lista, index) in listas"
+        v-for="(list, index) in lists"
         :key="index"
         cols="1"
         md="3"
@@ -20,11 +20,11 @@
       >
         <v-list dense class="pl-2 pr-2 grey darken-3">
           <v-subheader class="font-weight-bold white--text">
-            {{ lista.name }}
+            {{ list.name }}
           </v-subheader>
           <template>
             <v-card
-              v-for="task in lista.tasks"
+              v-for="task in list.tasks"
               :key="task"
               class="mb-2"
             >
@@ -33,10 +33,28 @@
               </v-card-subtitle>
               <v-card-text>{{ task }}</v-card-text>
             </v-card>
-            <v-btn @click="listas[0].tasks.push(4)">
+            <v-btn @click="lists[0].tasks.push(4)">
               +
             </v-btn>
           </template>
+        </v-list>
+      </v-col>
+      <v-col cols="3">
+        <v-list dense class="pl-2 pr-2 grey darken-3">
+          <v-text-field
+            v-model="listForm.name"
+            dense
+            single-line
+            hide-details
+            label="Name"
+            required
+          >
+            <template v-slot:append>
+              <v-icon @click="createList">
+                mdi-plus
+              </v-icon>
+            </template>
+          </v-text-field>
         </v-list>
       </v-col>
     </v-row>
@@ -52,26 +70,35 @@ export default {
   },
   data: vm => ({
     id: vm.$route.params.id,
-    listas: [
-      { name: 'To do', tasks: [1, 2, 3] },
-      { name: 'Doing' },
-      { name: 'Doing' },
-      { name: 'Testing' },
-      { name: 'Done' }
-    ],
+    // listas: [
+    //   { name: 'To do', tasks: [1, 2, 3] },
+    //   { name: 'Doing' },
+    //   { name: 'Doing' },
+    //   { name: 'Testing' },
+    //   { name: 'Done' }
+    // ],
+    listForm: {},
   }),
   computed: {
     Board: () => models.api.Board,
-    board: vm => vm.Board.findInStore({ query: { _id: vm.id } }).data[0]
+    board: vm => vm.Board.getFromStore(vm.id),
+    List: () => models.api.List,
+    lists: vm => vm.List.findInStore().data
+  },
+  created() {
+    this.List.find({ query: { boardId: this.id } });
+    this.listForm = new this.List();
+    this.initiateListForm();
   },
   methods: {
-    addBoard() {
-      this.boardForm = new this.Board();
-      this.showAddBoardForm = true;
+    initiateListForm() {
+      this.listForm = new this.List();
+      this.listForm.boardId = this.id;
     },
-    async createBoard() {
-      await this.boardForm.create();
-      this.showAddBoardForm = false;
+    async createList() {
+      const response = await this.listForm.create();
+      console.log('response list', response);
+      this.initiateListForm();
     },
   }
 };
