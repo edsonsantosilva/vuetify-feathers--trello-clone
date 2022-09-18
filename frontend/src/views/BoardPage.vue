@@ -24,7 +24,7 @@
           </v-subheader>
           <template>
             <v-card
-              v-for="task in list.tasks"
+              v-for="task in tasks"
               :key="task"
               class="mb-2"
             >
@@ -33,9 +33,24 @@
               </v-card-subtitle>
               <v-card-text>{{ task }}</v-card-text>
             </v-card>
-            <v-btn @click="lists[0].tasks.push(4)">
-              +
-            </v-btn>
+            <v-icon v-if="showTaskFormInList != list._id" @click="initiateTaskForm(list)">
+              mdi-plus
+            </v-icon>
+            <v-text-field
+              v-if="showTaskForm && showTaskFormInList === list._id"
+              v-model="taskForm.name"
+              dense
+              single-line
+              hide-details
+              label="Add task"
+              required
+            >
+              <template v-slot:append>
+                <v-icon @click="createTask(list)">
+                  mdi-plus
+                </v-icon>
+              </template>
+            </v-text-field>
           </template>
         </v-list>
       </v-col>
@@ -70,37 +85,49 @@ export default {
   },
   data: vm => ({
     id: vm.$route.params.id,
-    // listas: [
-    //   { name: 'To do', tasks: [1, 2, 3] },
-    //   { name: 'Doing' },
-    //   { name: 'Doing' },
-    //   { name: 'Testing' },
-    //   { name: 'Done' }
-    // ],
     listForm: {},
+    taskForm: {},
+    showTaskForm: false,
+    showTaskFormInList: ''
   }),
   computed: {
     Board: () => models.api.Board,
     board: vm => vm.Board.getFromStore(vm.id),
     List: () => models.api.List,
     lists: vm => vm.List.findInStore({ query: { boardId: vm.id } }).data,
+    Task: () => models.api.Task,
+    tasks: vm => vm.Task.findInStore().data,
   },
   created() {
     this.List.find({ query: { boardId: this.id } });
+    this.Task.find();
     this.initiateListForm();
+    // this.initiateTaskForm();
   },
   beforeDestroy() {
     this.$store.commit('lists/clearAll');
+    this.$store.commit('tasks/clearAll');
   },
   methods: {
     initiateListForm() {
       this.listForm = new this.List();
       this.listForm.boardId = this.id;
     },
+    initiateTaskForm(list) {
+      this.taskForm = new this.Task();
+      this.showTaskFormInList = list._id;
+      this.showTaskForm = true;
+    },
     async createList() {
       // TODO: apply try catch
       await this.listForm.create();
       this.initiateListForm();
+    },
+    async createTask(list) {
+      console.log('list info', list);
+      this.taskForm.listId = list._id;
+      await this.taskForm.create();
+      this.initiateTaskForm();
     },
   }
 };
