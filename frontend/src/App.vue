@@ -133,6 +133,7 @@ export default {
       this.loggingOut = true;
       try {
         await this.$store.dispatch('auth/logout');
+        this.$store.dispatch('clearStore');
         this.$router.replace({ name: 'login' });
       } catch (error) {
         console.error('An error happened during logout', error);

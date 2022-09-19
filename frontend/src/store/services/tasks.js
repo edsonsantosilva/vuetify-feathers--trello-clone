@@ -7,8 +7,9 @@ class Task extends BaseModel {
   // Define default properties here
   static instanceDefaults() {
     return {
-      title: '',
-      backgroundUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+      name: 'Task',
+      order: 0,
+      listId: '',
     };
   }
 }

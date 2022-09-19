@@ -25,13 +25,10 @@
           <template>
             <v-card
               v-for="task in tasks"
-              :key="task"
+              :key="task._id"
               class="mb-2"
             >
-              <v-card-subtitle class="pa-1">
-                Titulo
-              </v-card-subtitle>
-              <v-card-text>{{ task }}</v-card-text>
+              <v-card-text>{{ task.name }}</v-card-text>
             </v-card>
             <v-icon v-if="showTaskFormInList != list._id" @click="initiateTaskForm(list)">
               mdi-plus
@@ -103,10 +100,6 @@ export default {
     this.Task.find();
     this.initiateListForm();
     // this.initiateTaskForm();
-  },
-  beforeDestroy() {
-    this.$store.commit('lists/clearAll');
-    this.$store.commit('tasks/clearAll');
   },
   methods: {
     initiateListForm() {
