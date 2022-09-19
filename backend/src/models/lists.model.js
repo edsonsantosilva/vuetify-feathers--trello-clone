@@ -1,15 +1,16 @@
-// boards-model.js - A mongoose model
+// lists-model.js - A mongoose model
 // 
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 module.exports = function (app) {
-  const modelName = 'boards';
+  const modelName = 'lists';
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const schema = new Schema({
     name: { type: String, required: true },
-    backgroundUrl: { type: String, required: false },
-    ownerId: { type: Schema.Types.ObjectId, ref: 'users' }
+    order: { type: Number, default: 0, required: true },
+    archived: { type: Boolean, default: 0, required: false },
+    boardId: { type: Schema.Types.ObjectId, ref: 'boards' }
   }, {
     timestamps: true
   });

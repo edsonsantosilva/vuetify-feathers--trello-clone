@@ -1,21 +1,22 @@
 import feathersClient, { makeServicePlugin, BaseModel } from '../../plugins/feathers-client';
 
-class Board extends BaseModel {
+class Task extends BaseModel {
   // Required for $FeathersVuex plugin to work after production transpile.
-  static modelName = 'Board'
+  static modelName = 'Task'
 
   // Define default properties here
   static instanceDefaults() {
     return {
-      name: '',
-      backgroundUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+      name: 'Task',
+      order: 0,
+      listId: '',
     };
   }
 }
 
-const servicePath = 'boards';
+const servicePath = 'tasks';
 const servicePlugin = makeServicePlugin({
-  Model: Board,
+  Model: Task,
   service: feathersClient.service(servicePath),
   servicePath
 });

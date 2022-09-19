@@ -22,6 +22,12 @@ const servicePlugins = requireModule
 export default new Vuex.Store({
   state: {},
   mutations: {},
-  actions: {},
+  actions: {
+    clearStore(context) {
+      context.commit('boards/clearAll');
+      context.commit('lists/clearAll');
+      context.commit('tasks/clearAll');
+    }
+  },
   plugins: [...servicePlugins, auth]
 });

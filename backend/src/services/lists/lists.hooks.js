@@ -1,12 +1,9 @@
-// Application hooks that run for every service
-// const hooks = require('feathers-authentication-hooks');
+// const { authenticate } = require('@feathersjs/authentication').hooks;
 
 module.exports = {
   before: {
     all: [],
-    find: [
-      // hooks.restrictToOwner({ ownerField: 'ownerId' }),
-    ],
+    find: [],
     get: [],
     create: [],
     update: [],

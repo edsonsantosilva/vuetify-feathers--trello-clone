@@ -1,21 +1,23 @@
 import feathersClient, { makeServicePlugin, BaseModel } from '../../plugins/feathers-client';
 
-class Board extends BaseModel {
+class List extends BaseModel {
   // Required for $FeathersVuex plugin to work after production transpile.
-  static modelName = 'Board'
+  static modelName = 'List'
 
   // Define default properties here
   static instanceDefaults() {
     return {
-      name: '',
-      backgroundUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+      name: 'List 0',
+      order: 0,
+      archived: false,
+      boardId: '',
     };
   }
 }
 
-const servicePath = 'boards';
+const servicePath = 'lists';
 const servicePlugin = makeServicePlugin({
-  Model: Board,
+  Model: List,
   service: feathersClient.service(servicePath),
   servicePath
 });
@@ -33,7 +35,9 @@ feathersClient.service(servicePath).hooks({
   },
   after: {
     all: [],
-    find: [],
+    find: [
+      // context => { context.result.data[0].name = 'Edson'; }
+    ],
     get: [],
     create: [],
     update: [],
