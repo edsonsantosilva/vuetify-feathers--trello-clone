@@ -42,20 +42,34 @@
     </v-col>
     <v-col cols="3">
       <v-list dense class="pl-2 pr-2 grey darken-3">
+        <v-btn
+          v-if="!showListFormActions"
+          small
+          block
+          class="grey darken-1"
+          @click="initiateListForm"
+        >
+          Add a list
+        </v-btn>
         <v-text-field
+          v-else
           v-model="listForm.name"
           dense
           single-line
           hide-details
           label="Name"
           required
-        >
-          <template v-slot:append>
-            <v-icon @click="createList">
-              mdi-plus
+        />
+        <v-container v-show="showListFormActions" class="mt-3">
+          <v-row>
+            <v-btn depressed class="white--text green" @click="createList">
+              Save
+            </v-btn>
+            <v-icon class="ml-3 white--text" @click="cancelListCreation">
+              mdi-close
             </v-icon>
-          </template>
-        </v-text-field>
+          </v-row>
+        </v-container>
       </v-list>
     </v-col>
   </v-row>
@@ -75,6 +89,7 @@ export default {
     id: vm.$route.params.id,
     listForm: {},
     taskForm: {},
+    showListFormActions: false,
     showTaskForm: false,
     showTaskFormInList: ''
   }),
@@ -93,8 +108,10 @@ export default {
   },
   methods: {
     initiateListForm() {
+      if (this.listForm.name) { return; }
       this.listForm = new this.List();
       this.listForm.boardId = this.id;
+      this.showListFormActions = true;
     },
     initiateTaskForm(list) {
       this.taskForm = new this.Task();
@@ -104,13 +121,18 @@ export default {
     async createList() {
       // TODO: apply try catch
       await this.listForm.create();
-      this.initiateListForm();
     },
     async createTask(list) {
       this.taskForm.listId = list._id;
       await this.taskForm.create();
       this.initiateTaskForm(list);
     },
+    async cancelListCreation() {
+      // eslint-disable-next-line
+      await this.$store.commit('lists/removeTemps', [this.listForm.__id]);
+      this.listForm = {};
+      this.showListFormActions = false;
+    }
   }
 };
 </script>
