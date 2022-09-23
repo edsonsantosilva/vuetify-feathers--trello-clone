@@ -11,33 +11,7 @@
         <v-subheader class="font-weight-bold white--text">
           {{ list.name }}
         </v-subheader>
-        <template>
-          <v-card
-            v-for="task in tasks[index]"
-            :key="task._id"
-            class="mb-2"
-          >
-            <v-card-text>{{ task.name }}</v-card-text>
-          </v-card>
-          <v-icon v-if="showTaskFormInList != list._id" @click="initiateTaskForm(list)">
-            mdi-plus
-          </v-icon>
-          <v-text-field
-            v-if="showTaskForm && showTaskFormInList === list._id"
-            v-model="taskForm.name"
-            dense
-            single-line
-            hide-details
-            label="Add task"
-            required
-          >
-            <template v-slot:append>
-              <v-icon @click="createTask(list)">
-                mdi-plus
-              </v-icon>
-            </template>
-          </v-text-field>
-        </template>
+        <Tasks :list="list" />
       </v-list>
     </v-col>
     <v-col cols="3">
@@ -77,60 +51,38 @@
 
 <script>
 import { models } from 'feathers-vuex';
+import Tasks from './Tasks.vue';
 
 export default {
-  name: 'List',
+  name: 'Lists',
+  components: { Tasks },
   props: {
-    boardId: {
-      type: String
+    board: {
+      type: Object
     }
   },
-  data: vm => ({
-    id: vm.$route.params.id,
+  data: () => ({
     listForm: {},
-    taskForm: {},
     showListFormActions: false,
-    showTaskForm: false,
-    showTaskFormInList: ''
   }),
   computed: {
     List: () => models.api.List,
-    lists: vm => vm.List.findInStore({ query: { boardId: vm.id } }).data,
-    Task: () => models.api.Task,
-    tasks: vm => {
-      const tasks = vm.Task.findInStore().data;
-      const tasksFiltered = [];
-      vm.lists.forEach(list => {
-        tasksFiltered.push(tasks.filter(task => task.listId === list._id));
-      });
-      return tasksFiltered;
-    },
+    lists: vm => vm.List.findInStore({ query: { boardId: vm.board._id } }).data
+  },
+  created() {
+    this.List.find({ query: { boardId: this.board._id } });
   },
   methods: {
     initiateListForm() {
-      if (this.listForm.name) { return; }
-      this.listForm = new this.List();
-      this.listForm.boardId = this.id;
+      this.listForm = new this.List({ boardId: this.board._id });
       this.showListFormActions = true;
-    },
-    initiateTaskForm(list) {
-      this.taskForm = new this.Task();
-      this.showTaskFormInList = list._id;
-      this.showTaskForm = true;
     },
     async createList() {
       // TODO: apply try catch
       await this.listForm.create();
     },
-    async createTask(list) {
-      this.taskForm.listId = list._id;
-      await this.taskForm.create();
-      this.initiateTaskForm(list);
-    },
     async cancelListCreation() {
-      // eslint-disable-next-line
-      await this.$store.commit('lists/removeTemps', [this.listForm.__id]);
-      this.listForm = {};
+      await this.listForm.remove();
       this.showListFormActions = false;
     }
   }

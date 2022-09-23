@@ -16,6 +16,23 @@
             </v-card-subtitle>
           </v-card>
         </v-col>
+        <v-col cols="3">
+          <v-card class="pa-2">
+            <v-btn block @click="showBoardForm">
+              Add a board
+            </v-btn>
+            <div>
+              <v-card-text>
+                <p class="text-h4 text--primary">
+                  NAME
+                </p>
+              </v-card-text>
+              <v-card-subtitle class="">
+                updated at: 456
+              </v-card-subtitle>
+            </div>
+          </v-card>
+        </v-col>
       </v-row>
     </v-container>
     <v-container>
@@ -68,10 +85,6 @@ export default {
   },
   created() {
     this.Board.find();
-  },
-  beforeDestroy() {
-    // this.$store.commit('boards/clearAll');
-    // this.$store.commit('boards/removeTemps', []);
   },
   methods: {
     showBoardForm() {

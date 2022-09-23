@@ -11,7 +11,7 @@
         </v-btn>
         Board name: {{ board.name }}
       </v-col>
-      <Lists />
+      <Lists :board="board" />
     </v-row>
   </v-container>
 </template>
@@ -23,21 +23,20 @@ import Lists from '../components/Lists.vue';
 export default {
   name: 'BoardPage',
   components: { Lists },
-  props: {},
-  data: vm => ({
-    id: vm.$route.params.id,
+  data: () => ({
   }),
   computed: {
     Board: () => models.api.Board,
-    board: vm => vm.Board.getFromStore(vm.id),
-    List: () => models.api.List,
-    Task: () => models.api.Task,
+    board: vm => vm.Board.getFromStore(vm.$route.params.id),
+    stylo: vm => {
+      if (vm.board) {
+        return vm.board.backgroundUrl;
+      }
+      return true;
+    },
   },
   created() {
-    this.List.find({ query: { boardId: this.id } });
-    this.Task.find();
-  },
-  methods: {
+    this.Board.find();
   }
 };
 </script>
