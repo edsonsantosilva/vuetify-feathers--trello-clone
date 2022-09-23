@@ -36,7 +36,12 @@
         />
         <v-container v-show="showListFormActions" class="mt-3">
           <v-row>
-            <v-btn depressed class="white--text green" @click="createList">
+            <v-btn
+              depressed
+              color="green"
+              class="white--text"
+              @click="createList"
+            >
               Save
             </v-btn>
             <v-icon class="ml-3 white--text" @click="cancelListCreation">
