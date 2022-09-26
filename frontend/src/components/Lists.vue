@@ -14,19 +14,12 @@
         <Tasks :list="list" />
       </v-list>
     </v-col>
-    <v-col cols="3">
+    <v-col v-if="!showListFormActions" cols="3" @click="initiateListForm">
+      <AddComponent title="Add a list" />
+    </v-col>
+    <v-col v-else cols="3">
       <v-list dense class="pl-2 pr-2 grey darken-3">
-        <v-btn
-          v-if="!showListFormActions"
-          small
-          block
-          class="grey darken-1"
-          @click="initiateListForm"
-        >
-          Add a list
-        </v-btn>
         <v-text-field
-          v-else
           v-model="listForm.name"
           dense
           single-line
@@ -57,10 +50,11 @@
 <script>
 import { models } from 'feathers-vuex';
 import Tasks from './Tasks.vue';
+import AddComponent from './AddComponent.vue';
 
 export default {
   name: 'Lists',
-  components: { Tasks },
+  components: { Tasks, AddComponent },
   props: {
     board: {
       type: Object

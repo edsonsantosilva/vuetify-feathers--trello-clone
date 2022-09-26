@@ -23,14 +23,19 @@ import Lists from '../components/Lists.vue';
 export default {
   name: 'BoardPage',
   components: { Lists },
+  props: {
+    id: {
+      type: String,
+    }
+  },
   data: () => ({
   }),
   computed: {
     Board: () => models.api.Board,
-    board: vm => vm.Board.getFromStore(vm.$route.params.id),
-    stylo: vm => {
+    board: vm => vm.Board.getFromStore(vm.id) || vm.Board.instanceDefaults(),
+    showErrorMessage: vm => {
       if (vm.board) {
-        return vm.board.backgroundUrl;
+        return 'Didn\'t find a page';
       }
       return true;
     },

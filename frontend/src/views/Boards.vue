@@ -9,20 +9,8 @@
               gradient="to bottom, rgba(255,255,255,.15), rgba(0,0,0,.5)"
               :src="board.backgroundUrl"
             >
-              <v-card-title>
-                <span>
-                  {{ board.name }}
-                </span>
-                <v-spacer />
-                <!-- <v-btn
-                  icon
-                  color="pink"
-                >
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn> -->
-                <v-btn icon>
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
+              <v-card-title class="font-weight-bold">
+                {{ board.name }}
               </v-card-title>
             </v-img>
             <v-card-subtitle class="py-1">
@@ -30,12 +18,12 @@
             </v-card-subtitle>
           </v-card>
         </v-col>
-        <v-col cols="3">
-          <v-card class="pa-2">
-            <v-btn v-if="!showAddBoardForm" block @click="initiateBoardForm">
-              Add a board
-            </v-btn>
-            <div v-else>
+        <v-col v-if="!showAddBoardForm" cols="3" @click="initiateBoardForm">
+          <AddComponent title="Add a new board" />
+        </v-col>
+        <v-col v-else cols="3">
+          <v-card height="25vh">
+            <div>
               <v-card-text>
                 <v-form ref="form" @submit.prevent="createBoard">
                   <v-text-field
@@ -60,7 +48,7 @@
                     class="white--text"
                     type="submit"
                   >
-                    Create Board
+                    Create
                   </v-btn>
                   <v-icon class="ml-3 white--text" @click="cancelBoardCreation">
                     mdi-close
@@ -77,9 +65,11 @@
 
 <script>
 import { models } from 'feathers-vuex';
+import AddComponent from '../components/AddComponent.vue';
 
 export default {
   name: 'BoardView',
+  components: { AddComponent },
   data: () => ({
     boardForm: {},
     showAddBoardForm: false
@@ -112,6 +102,4 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>
