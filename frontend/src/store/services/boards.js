@@ -8,7 +8,7 @@ class Board extends BaseModel {
   static instanceDefaults() {
     return {
       name: '',
-      backgroundUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+      backgroundUrl: ''
     };
   }
 }
