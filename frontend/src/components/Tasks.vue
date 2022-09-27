@@ -4,6 +4,8 @@
       v-for="task in tasks"
       :key="task._id"
       class="mb-2"
+      draggable="true"
+      @dragstart="$emit('dragStart', task)"
     >
       <v-card-text>{{ task.name }}</v-card-text>
     </v-card>
@@ -35,6 +37,9 @@ export default {
   name: 'Tasks',
   props: {
     list: {
+      type: Object
+    },
+    droppingList: {
       type: Object
     }
   },

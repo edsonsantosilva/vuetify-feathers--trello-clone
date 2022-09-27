@@ -1,6 +1,8 @@
 <template>
-  <v-container class="d-flex justify-center fill-height text-h3">
-    <p>Hi, Welcome to my Trello Clone</p>
+  <v-container class="justify-center fill-height text-h3">
+    <v-row class="justify-center">
+      <p>Hi, Welcome to my Trello Clone</p>
+    </v-row>
     <v-btn @click="$router.push({name: 'boards'})">
       Go to Boards
     </v-btn>

@@ -7,12 +7,25 @@
       md="3"
       sm="3"
     >
-      <v-list dense class="pl-2 pr-2 grey darken-3">
-        <v-subheader class="font-weight-bold white--text">
-          {{ list.name }}
-        </v-subheader>
-        <Tasks :list="list" />
-      </v-list>
+      <div
+        @drop="drop($event)"
+        @dragover="dragover($event, list)"
+      >
+        <v-list
+          dense
+          class="pl-2 pr-2"
+          :class="{ green: droppingList === list, 'grey darken-3' : droppingList != list}"
+        >
+          <v-subheader class="font-weight-bold white--text">
+            {{ list.name }}
+          </v-subheader>
+          <Tasks
+            :list="list"
+            :dropping-list="droppingList"
+            @dragStart="dragStart"
+          />
+        </v-list>
+      </div>
     </v-col>
     <v-col v-if="!showListFormActions" cols="3" @click="initiateListForm">
       <AddComponent title="Add a list" />
@@ -44,6 +57,7 @@
         </v-container>
       </v-list>
     </v-col>
+    {{ droppingList }}
   </v-row>
 </template>
 
@@ -63,6 +77,9 @@ export default {
   data: () => ({
     listForm: {},
     showListFormActions: false,
+    isHighlighted: false,
+    droppingList: null,
+    draggedTask: null
   }),
   computed: {
     List: () => models.api.List,
@@ -83,6 +100,21 @@ export default {
     async cancelListCreation() {
       await this.listForm.remove();
       this.showListFormActions = false;
+    },
+    dragStart(task) {
+      this.draggedTask = task;
+    },
+    dragover(event, list) {
+      this.droppingList = list;
+      event.preventDefault();
+    },
+    drop(event) {
+      if (this.droppingList) {
+        this.draggedTask.listId = this.droppingList._id;
+        this.draggedTask.save();
+      }
+      event.preventDefault();
+      this.droppingList = null;
     }
   }
 };
