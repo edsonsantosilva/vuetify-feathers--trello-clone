@@ -5,11 +5,21 @@
     fluid
   >
     <v-row>
-      <v-col cols="12" class="pt-6 pl-6 primary">
-        <v-btn plain @click="$router.back()">
+      <v-col v-if="isFindPending" cols="12" class="pt-6 pl-6 primary">
+        <span>Searching for board...</span>
+      </v-col>
+      <v-col
+        v-else
+        cols="12"
+        class="d-flex pt-6 pl-6 align-center"
+        :class="{red: showErrorMessage, primary: !showErrorMessage}"
+      >
+        <v-btn small plain @click="$router.back()">
           <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
-        Board name: {{ board.name }}
+        <span>
+          {{ showErrorMessage || board.name }}
+        </span>
       </v-col>
       <Lists :board="board" />
     </v-row>
@@ -18,6 +28,7 @@
 
 <script>
 import { models } from 'feathers-vuex';
+import { mapState } from 'vuex';
 import Lists from '../components/Lists.vue';
 
 export default {
@@ -31,14 +42,21 @@ export default {
   data: () => ({
   }),
   computed: {
+    ...mapState('boards', ['isFindPending']),
     Board: () => models.api.Board,
     board: vm => vm.Board.getFromStore(vm.id) || vm.Board.instanceDefaults(),
     showErrorMessage: vm => {
-      if (vm.board) {
-        return 'Didn\'t find a page';
+      if (!vm.board._id) {
+        return 'Didn\'t find the board';
       }
-      return true;
+      return false;
     },
+    // loading: ({ Board }) => {
+    //   if (Board.store.state.boards.isFindPending) {
+    //     return 'Searching for board...';
+    //   }
+    //   return '';
+    // },
   },
   created() {
     this.Board.find();
