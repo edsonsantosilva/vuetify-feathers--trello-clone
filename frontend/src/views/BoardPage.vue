@@ -1,14 +1,15 @@
 <template>
   <v-container
     class="fill-height align-start"
-    :style="{ backgroundImage: 'url(' + board.backgroundUrl + ')', backgroundSize: 'cover'}"
+    :style="{ backgroundImage: 'url(' + '' + ')', backgroundSize: 'cover'}"
     fluid
   >
     <v-row>
-      <v-col v-if="isFindPending" cols="12" class="pt-6 pl-6 primary">
+      {{ isBoard }}
+      <!-- <v-col v-if="isBoardFindPending" cols="12" class="pt-6 pl-6 primary">
         <span>Searching for board...</span>
-      </v-col>
-      <v-col
+      </v-col> -->
+      <!-- <v-col
         v-else
         cols="12"
         class="d-flex pt-6 pl-6 align-center"
@@ -20,18 +21,19 @@
         <span>
           {{ showErrorMessage || board.name }}
         </span>
-      </v-col>
-      <Lists :board="board" />
+      </v-col> -->
+      <!-- <Lists :board="currentBoard" /> -->
     </v-row>
   </v-container>
 </template>
 
 <script>
-import { models } from 'feathers-vuex';
-import { mapState } from 'vuex';
+import Vue from 'vue';
+import { defineComponent } from '@vue/composition-api';
+import { useGet } from 'feathers-vuex';
 import Lists from '../components/Lists.vue';
 
-export default {
+export default defineComponent({
   name: 'BoardPage',
   components: { Lists },
   props: {
@@ -39,29 +41,33 @@ export default {
       type: String,
     }
   },
-  data: () => ({
-  }),
-  computed: {
-    ...mapState('boards', ['isFindPending']),
-    Board: () => models.api.Board,
-    board: vm => vm.Board.getFromStore(vm.id) || vm.Board.instanceDefaults(),
-    showErrorMessage: vm => {
-      if (!vm.board._id) {
-        return 'Didn\'t find the board';
-      }
-      return false;
-    },
-    // loading: ({ Board }) => {
-    //   if (Board.store.state.boards.isFindPending) {
-    //     return 'Searching for board...';
+  setup(props) {
+    const { Board } = Vue.$FeathersVuex.api;
+    // debugger;
+    // const Board = computed(() => models.api.Board);
+
+    const isBoard = useGet({
+      model: Board,
+      id: props.id,
+      // queryWhen: computed(() => (
+      //   props.id && Board.getFromStore(props.id)
+      // )),
+      // immediate: true
+    });
+
+    // const currentBoard = computed(() => Board.value.getFromStore(props.id));
+    // const isBoardFindPending = computed(() => context.root.$store.state.boards.isFindPending);
+
+    // const showErrorMessage = computed(() => {
+    //   if (!board.value._id && !isBoardFindPending.value) {
+    //     return 'Didn\'t find the board';
     //   }
-    //   return '';
-    // },
-  },
-  created() {
-    this.Board.find();
+    //   return false;
+    // });
+
+    return { isBoard };
   }
-};
+});
 </script>
 
 <style>

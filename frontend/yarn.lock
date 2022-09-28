@@ -1408,7 +1408,7 @@
   optionalDependencies:
     prettier "^1.18.2 || ^2.0.0"
 
-"@vue/composition-api@^1.7.1":
+"@vue/composition-api@^1.0.0-rc.1":
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-1.7.1.tgz#aa6831be5a12817d93e89e247460c310dd7a3a32"
   integrity sha512-xDWoEtxGXhH9Ku3ROYX/rzhcpt4v31hpPU5zF3UeVC/qxA3dChmqU8zvTUYoKh3j7rzpNsoFOwqsWG7XPMlaFA==
@@ -4316,7 +4316,7 @@ feathers-hooks-common@^6.1.5:
     lodash "^4.17.21"
     traverse "^0.6.6"
 
-feathers-vuex@^3.15.0:
+feathers-vuex@^3.16.0:
   version "3.16.0"
   resolved "https://registry.yarnpkg.com/feathers-vuex/-/feathers-vuex-3.16.0.tgz#a8eb45fc60ddef9aede718067c0db093ded88f7c"
   integrity sha512-o4fmUAWBrHVG/mQYgwbjZ4+nJvaF3WuqGtvdlSBevrzEoJzUfoNERLyXS+hanOAnc86AFwrKTRdpG5ZeEQxhsQ==

@@ -96,19 +96,11 @@
 </template>
 
 <script>
-import { ref } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import { models } from 'feathers-vuex';
 
 export default {
   name: 'App',
-  setup() {
-    const textao = ref('');
-    return {
-      textao
-    };
-  },
-
   data: () => ({
     loggingOut: false,
     items: [
