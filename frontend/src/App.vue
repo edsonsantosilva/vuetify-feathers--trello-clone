@@ -1,32 +1,28 @@
 <template>
   <v-app>
-    <v-app-bar
+    <v-app-bar app color="primary">
+      olu
+      <span v-if="isAuthenticated">USUÁRIO</span>
+      <v-btn
+        :to="{ name: 'login'}"
+        text
+      >
+        <span class="mr-2">Login</span>
+      </v-btn>
+      <v-btn
+        :loading="loggingOut"
+        text
+        @click="logout"
+      >
+        <span class="mr-2">Logout</span>
+      </v-btn>
+    </v-app-bar>
+    <!-- <v-app-bar
       app
       color="primary"
     >
       <v-container fluid class="pa-0">
         <v-row class="justify-start align-center">
-          <v-col class="pa-0 pl-2" cols="auto" @click="$router.push({ name: 'home'})">
-            <v-img
-              alt="Vuetify Logo"
-              class="shrink mr-2"
-              contain
-              src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-              transition="scale-transition"
-              width="40"
-            />
-          </v-col>
-          <v-col class="pa-0" cols="auto" @click="$router.push({ name: 'home' })">
-            <v-img
-              alt="Vuetify Name"
-              class="shrink mt-1 hidden-sm-and-down"
-              contain
-              min-width="100"
-              src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-              width="100"
-            />
-          </v-col>
-          <v-spacer />
           <v-col cols="auto">
             <v-switch
               v-model="$vuetify.theme.dark"
@@ -87,7 +83,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-app-bar>
+    </v-app-bar> -->
 
     <v-main>
       <router-view class="pa-0" />
@@ -96,53 +92,100 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import { models } from 'feathers-vuex';
+import { onMounted, ref, watch } from '@vue/composition-api';
 
 export default {
-  name: 'App',
+  name: 'Appop',
+  setup(props, context) {
+    console.log(context);
+    // debugger;
+    const { $store, $router } = context.root;
+    const loggingOut = ref(false);
+    const isAuthenticated = ref(false);
 
-  data: () => ({
-    loggingOut: false,
-    items: [
-      { title: 'Boards', route: 'boards' },
-      { title: 'Settings', route: 'settings' }
-    ]
-  }),
-  computed: {
-    ...mapGetters('auth', ['isAuthenticated', 'user']),
-    User: () => models.api.User,
-    currentUser: vm => (vm.isAuthenticated ? vm.user : new vm.User()),
-    selectedTheme: vm => (vm.$vuetify.theme.dark ? 'Dark' : 'Light')
-  },
-  async created() {
-    this.$vuetify.theme.dark = true;
-    try {
-      await this.authenticate();
-    } catch (error) {
-      console.log('created app.vue', error);
-      this.$router.push({ name: 'login' });
-    }
-  },
-  methods: {
-    ...mapActions('auth', ['authenticate']),
-    changeColor() {
-      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-    },
-    async logout() {
-      this.loggingOut = true;
+    // Redirect to chat page if there's a user, otherwise to login page.
+    watch(
+      () => $store.state.auth.user,
+      user => {
+        const toRouteName = user ? 'home' : 'login';
+        $router.replace({ name: toRouteName });
+      },
+      { lazy: true }
+    );
+
+    watch(
+      () => $store.state.auth.user,
+      user => {
+        const autenticado = user.name || false;
+        isAuthenticated.value = autenticado;
+      },
+      { lazy: true }
+    );
+
+    // Attempt jwt auth when the app mounts.
+    onMounted(async () => {
+      $store.dispatch('auth/authenticate').catch(error => {
+        if (!error.message.includes('Could not find stored JWT')) {
+          console.error('problema pra autenticar', error);
+        }
+      });
+    });
+
+    async function logout() {
+      console.log('fazer logout');
+      loggingOut.value = true;
       try {
-        await this.$store.dispatch('auth/logout');
-        this.$store.dispatch('clearStore');
-        this.$router.replace({ name: 'login' });
+        await $store.dispatch('auth/logout');
+        $store.dispatch('clearStore');
+        // $router.replace({ name: 'login' });
       } catch (error) {
         console.error('An error happened during logout', error);
       }
-      this.loggingOut = false;
-    },
-    goToRoute(route) {
-      this.$router.push(`/${route}`);
+      loggingOut.value = false;
     }
-  }
+
+    return { logout, loggingOut, isAuthenticated };
+  },
+  // data: () => ({
+  //   items: [
+  //     { title: 'Boards', route: 'boards' },
+  //     { title: 'Settings', route: 'settings' }
+  //   ]
+  // }),
+  // computed: {
+  //   ...mapGetters('auth', ['isAuthenticated', 'user']),
+  //   User: () => models.api.User,
+  //   currentUser: vm => (vm.isAuthenticated ? vm.user : new vm.User()),
+  //   selectedTheme: vm => (vm.$vuetify.theme.dark ? 'Dark' : 'Light')
+  // },
+  // async created() {
+  //   this.$vuetify.theme.dark = true;
+  //   try {
+  //     await this.authenticate();
+  //   } catch (error) {
+  //     console.log('created app.vue', error);
+  //     this.$router.push({ name: 'login' });
+  //   }
+  // },
+  // methods: {
+  //   ...mapActions('auth', ['authenticate']),
+  //   changeColor() {
+  //     this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+  //   },
+  //   // async logout() {
+  //   //   this.loggingOut = true;
+  //   //   try {
+  //   //     await this.$store.dispatch('auth/logout');
+  //   //     this.$store.dispatch('clearStore');
+  //   //     this.$router.replace({ name: 'login' });
+  //   //   } catch (error) {
+  //   //     console.error('An error happened during logout', error);
+  //   //   }
+  //   //   this.loggingOut = false;
+  //   // },
+  //   goToRoute(route) {
+  //     this.$router.push(`/${route}`);
+  //   }
+  // }
 };
 </script>

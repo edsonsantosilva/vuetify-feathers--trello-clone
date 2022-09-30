@@ -19,13 +19,19 @@ const servicePlugin = makeServicePlugin({
   service: feathersClient.service(servicePath),
   servicePath
 });
-
+const wait = () => (
+  new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  })
+);
 // Setup the client-side Feathers hooks.
 feathersClient.service(servicePath).hooks({
   before: {
     all: [],
     find: [],
-    get: [],
+    get: [wait],
     create: [],
     update: [],
     patch: [],

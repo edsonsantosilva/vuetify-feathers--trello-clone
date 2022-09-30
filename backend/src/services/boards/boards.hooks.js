@@ -29,8 +29,14 @@ module.exports = {
 
   after: {
     all: [],
-    find: [],
-    get: [],
+    find: [context => {
+      console.log('ACHOU', context);
+    }],
+    get: [
+      context => {
+        console.log('ACHOU', context);
+      }
+    ],
     create: [],
     update: [],
     patch: [],

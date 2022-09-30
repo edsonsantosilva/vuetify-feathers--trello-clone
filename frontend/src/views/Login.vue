@@ -77,7 +77,7 @@ export default {
           ...this.loginUser
         });
         console.log('User logged?', response);
-        this.$router.replace('/');
+        this.$router.replace('/home');
       } catch (error) {
         console.error('An error happened during login', error);
         this.messageError = error.message;
