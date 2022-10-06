@@ -3,8 +3,7 @@
   "version": "1.0.22",
   "private": true,
   "scripts": {
-    "copy": ".\\copy-deps.ps1",
-    "serve": "npm run copy && vue-cli-service serve",
+    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --modern",
     "lint": "vue-cli-service lint",
     "postversion": "cd .. && git add . && git commit -m \"Patched frontend version\" && git push && git push --tags && cd frontend"
