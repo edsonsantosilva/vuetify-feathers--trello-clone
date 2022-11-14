@@ -17,7 +17,7 @@ export default {
       id: '631f3ed7732c881c98c000c5'
     });
     console.log('board', board);
-    console.log('isPending', isPending);
+    // console.log('isPending', isPending);
     return { board };
   }
 };
